@@ -8,4 +8,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Tasks.v1" Version="1.69.0.3790" />
+  </ItemGroup>
+
 </Project>
