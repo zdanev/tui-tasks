@@ -21,7 +21,7 @@ namespace TuiTasks
                 System.Console.WriteLine("Tasks:");
                 foreach (var task in tasks)
                 {
-                    System.Console.WriteLine($"  - {task.Title} ({task.Id}) from list {task.ListId}");
+                    System.Console.WriteLine($"  - {task.Title} ({task.Id})");
                 }
             }
         }
