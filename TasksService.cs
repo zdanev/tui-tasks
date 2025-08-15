@@ -13,7 +13,7 @@ namespace TuiTasks
 {
     public class TasksServiceWrapper
     {
-        private static readonly string[] Scopes = { TasksService.Scope.TasksReadonly };
+        private static readonly string[] Scopes = { TasksService.Scope.Tasks };
         private static readonly string ApplicationName = "Google Tasks API .NET Quickstart";
 
         private readonly TasksService _service;
@@ -65,6 +65,12 @@ namespace TuiTasks
                 }
             }
             return allTasks;
+        }
+
+        public async Task AddTask(string taskTitle, string listId = "@default")
+        {
+            var task = new Google.Apis.Tasks.v1.Data.Task { Title = taskTitle };
+            await _service.Tasks.Insert(task, listId).ExecuteAsync();
         }
     }
 }

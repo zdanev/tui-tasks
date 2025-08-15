@@ -19,6 +19,14 @@ This is a simple console application that uses the Google Tasks API to list your
 
 2.  **Run the application.**
 
+    To list your tasks, run the application without any parameters:
+
     ```bash
     dotnet run
+    ```
+
+    To add a new task, use the `-a` parameter followed by the task description:
+
+    ```bash
+    dotnet run -- -a "Your new task description"
     ```
