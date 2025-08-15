@@ -1,0 +1,70 @@
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Tasks.v1;
+using Google.Apis.Util.Store;
+
+namespace TuiTasks
+{
+    public class TasksServiceWrapper
+    {
+        private static readonly string[] Scopes = { TasksService.Scope.TasksReadonly };
+        private static readonly string ApplicationName = "Google Tasks API .NET Quickstart";
+
+        private readonly TasksService _service;
+
+        public TasksServiceWrapper()
+        {
+            UserCredential credential;
+
+            using (var stream =
+                new FileStream("client_secret.json", FileMode.Open, FileAccess.Read))
+            {
+                string credPath = "token.json";
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.FromStream(stream).Secrets,
+                    Scopes,
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore(credPath, true)).Result;
+                Console.WriteLine("Credential file saved to: " + credPath);
+            }
+
+            _service = new TasksService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = ApplicationName,
+            });
+        }
+
+        public async Task<List<GTask>> ListTasks()
+        {
+            var allTasks = new List<GTask>();
+            TasklistsResource.ListRequest listRequest = _service.Tasklists.List();
+            listRequest.MaxResults = 10;
+
+            var taskLists = await listRequest.ExecuteAsync();
+            if (taskLists.Items != null && taskLists.Items.Count > 0)
+            {
+                foreach (var taskList in taskLists.Items)
+                {
+                    TasksResource.ListRequest tasksRequest = _service.Tasks.List(taskList.Id);
+                    var tasks = await tasksRequest.ExecuteAsync();
+                    if (tasks.Items != null && tasks.Items.Count > 0)
+                    {
+                        foreach (var task in tasks.Items)
+                        {
+                            allTasks.Add(new GTask { Title = task.Title, Id = task.Id, ListId = taskList.Id });
+                        }
+                    }
+                }
+            }
+            return allTasks;
+        }
+    }
+}
