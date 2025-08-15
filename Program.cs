@@ -25,7 +25,8 @@ namespace TuiTasks
                 System.Console.WriteLine("Tasks:");
                 foreach (var task in tasks)
                 {
-                    System.Console.WriteLine($"  - {task.Title} ({task.Id})");
+                  string due = task.Due.HasValue ? "[" + task.Due.Value.ToShortDateString() + "] " : "";
+                    System.Console.WriteLine($"{due}{task.Title} ({task.Id})");
                 }
             }
         }

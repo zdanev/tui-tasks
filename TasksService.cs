@@ -60,7 +60,7 @@ namespace TuiTasks
                     {
                         foreach (var task in tasks.Items)
                         {
-                            allTasks.Add(new GTask { Title = task.Title, Id = task.Id, ListId = taskList.Id });
+                            allTasks.Add(new GTask { Title = task.Title, Id = task.Id, ListId = taskList.Id, Due = DateTime.TryParse(task.Due, out DateTime dueDateTime) ? dueDateTime : (DateTime?)null });
                         }
                     }
                 }
