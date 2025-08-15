@@ -14,6 +14,10 @@ namespace TuiTasks
                 await tasksService.AddTask(args[1]);
                 System.Console.WriteLine("Task added.");
             }
+            else if (args.Length > 1 && args[0] == "-d")
+            {
+                await tasksService.DeleteTask(args[1]);
+            }
             else
             {
                 var tasks = await tasksService.ListTasks();

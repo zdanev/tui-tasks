@@ -30,3 +30,9 @@ This is a simple console application that uses the Google Tasks API to list your
     ```bash
     dotnet run -- -a "Your new task description"
     ```
+
+    To delete a task, use the `-d` parameter followed by the task ID:
+
+    ```bash
+    dotnet run -- -d "Your task ID"
+    ```

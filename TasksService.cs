@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
@@ -71,6 +72,22 @@ namespace TuiTasks
         {
             var task = new Google.Apis.Tasks.v1.Data.Task { Title = taskTitle };
             await _service.Tasks.Insert(task, listId).ExecuteAsync();
+        }
+
+        public async Task DeleteTask(string taskId)
+        {
+            var allTasks = await ListTasks();
+            var taskToDelete = allTasks.FirstOrDefault(t => t.Id == taskId);
+
+            if (taskToDelete != null)
+            {
+                await _service.Tasks.Delete(taskToDelete.ListId, taskId).ExecuteAsync();
+                Console.WriteLine($"Task '{taskToDelete.Title}' deleted.");
+            }
+            else
+            {
+                Console.WriteLine("Task not found.");
+            }
         }
     }
 }
