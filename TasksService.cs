@@ -60,7 +60,14 @@ namespace TuiTasks
                     {
                         foreach (var task in tasks.Items)
                         {
-                            allTasks.Add(new GTask { Title = task.Title, Id = task.Id, ListId = taskList.Id, Due = DateTime.TryParse(task.Due, out DateTime dueDateTime) ? dueDateTime : (DateTime?)null });
+                            if (DateTimeOffset.TryParse(task.Due, out DateTimeOffset dueDateTimeOffset))
+                            {
+                                allTasks.Add(new GTask { Title = task.Title, Id = task.Id, ListId = taskList.Id, Due = dueDateTimeOffset });
+                            }
+                            else
+                            {
+                                allTasks.Add(new GTask { Title = task.Title, Id = task.Id, ListId = taskList.Id, Due = null });
+                            }
                         }
                     }
                 }
@@ -74,12 +81,12 @@ namespace TuiTasks
             await _service.Tasks.Insert(task, listId).ExecuteAsync();
         }
 
-        public async Task AddTask(string taskTitle, DateTime? dueDate, string listId = "@default")
+        public async Task AddTask(string taskTitle, DateTimeOffset? dueDate, string listId = "@default")
         {
             var task = new Google.Apis.Tasks.v1.Data.Task { Title = taskTitle };
             if (dueDate.HasValue)
             {
-                task.Due = dueDate.Value.ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'");
+                task.Due = dueDate.Value.ToString("O"); // ISO 8601 format
             }
             await _service.Tasks.Insert(task, listId).ExecuteAsync();
         }

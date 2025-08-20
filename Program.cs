@@ -65,7 +65,7 @@ namespace TuiTasks
 
                         foreach (var task in tasks)
                         {
-                            dataTable.Rows.Add(task.Due.HasValue ? task.Due.Value.ToShortDateString() : "", task.Title);
+                            dataTable.Rows.Add(task.Due.HasValue ? task.Due.Value.ToString("d") : "", task.Title);
                         }
                         table.Table = dataTable;
                         table.Style.ColumnStyles.Add(dueDateColumn, new Terminal.Gui.TableView.ColumnStyle() { MaxWidth = 12 });
@@ -76,11 +76,14 @@ namespace TuiTasks
 
         private static void AddTask()
         {
-            var dialog = new Dialog("Add Task", 60, 9);
+            var dialog = new Dialog("Add Task", 60, 11);
             var titleLabel = new Label("Title:") { X = 1, Y = 1 };
             var titleText = new TextField("") { X = 10, Y = 1, Width = 40 };
             var dueDateLabel = new Label("Due Date:") { X = 1, Y = 3 };
-            var dueDateField = new DateField(DateTime.Now) { X = 10, Y = 3, Width = 40 };
+            var dateField = new DateField(DateTime.Now) { X = 10, Y = 3, Width = 40 };
+            var dueTimeLabel = new Label("Due Time:") { X = 1, Y = 5 };
+            var timeField = new TimeField(DateTime.Now.TimeOfDay) { X = 10, Y = 5, Width = 40 };
+
             var okButton = new Button("OK");
             var cancelButton = new Button("Cancel");
 
@@ -88,9 +91,14 @@ namespace TuiTasks
                 var taskTitle = titleText.Text?.ToString();
                 if (!string.IsNullOrEmpty(taskTitle))
                 {
+                    var date = dateField.Date;
+                    var time = timeField.Time;
+                    var dateTime = date.Add(time);
+                    var dateTimeOffset = new DateTimeOffset(dateTime, TimeZoneInfo.Local.GetUtcOffset(dateTime));
+
                     Task.Run(async () =>
                     {
-                        await tasksService.AddTask(taskTitle, dueDateField.Date);
+                        await tasksService.AddTask(taskTitle, dateTimeOffset);
                         RefreshTasks();
                     });
                     Application.RequestStop();
@@ -98,7 +106,7 @@ namespace TuiTasks
             };
             cancelButton.Clicked += () => { Application.RequestStop(); };
 
-            dialog.Add(titleLabel, titleText, dueDateLabel, dueDateField);
+            dialog.Add(titleLabel, titleText, dueDateLabel, dateField, dueTimeLabel, timeField);
             dialog.AddButton(okButton);
             dialog.AddButton(cancelButton);
             Application.Run(dialog);
