@@ -58,17 +58,31 @@ namespace TuiTasks
                     if (table != null)
                     {
                         var dataTable = new DataTable();
-                        var dueDateColumn = new DataColumn("Due Date");
-                        var titleColumn = new DataColumn("Title");
+                        var dueDateColumn = new DataColumn(" Due Date ");
+                        var titleColumn = new DataColumn(" Title ");
                         dataTable.Columns.Add(dueDateColumn);
                         dataTable.Columns.Add(titleColumn);
 
                         foreach (var task in tasks)
                         {
-                            dataTable.Rows.Add(task.Due.HasValue ? task.Due.Value.ToString("d") : "", task.Title);
+                            if (task.Due.HasValue)
+                            {
+                                if (task.Due.Value.TimeOfDay.TotalSeconds == 0)
+                                {
+                                    dataTable.Rows.Add($" {task.Due.Value.ToString("MM/dd/yyyy")} ", $" {task.Title} ");
+                                }
+                                else
+                                {
+                                    dataTable.Rows.Add($" {task.Due.Value.ToString("MM/dd/yyyy HH:mm")} ", $" {task.Title} ");
+                                }
+                            }
+                            else
+                            {
+                                dataTable.Rows.Add("  ", $" {task.Title} ");
+                            }
                         }
                         table.Table = dataTable;
-                        table.Style.ColumnStyles.Add(dueDateColumn, new Terminal.Gui.TableView.ColumnStyle() { MaxWidth = 12 });
+                        table.Style.ColumnStyles.Add(dueDateColumn, new Terminal.Gui.TableView.ColumnStyle() { MaxWidth = 22 });
                     }
                 });
             });
