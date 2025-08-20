@@ -12,14 +12,14 @@ using Google.Apis.Util.Store;
 
 namespace TuiTasks
 {
-    public class TasksServiceWrapper
+    public class GTasksService
     {
         private static readonly string[] Scopes = { TasksService.Scope.Tasks };
         private static readonly string ApplicationName = "Google Tasks API .NET Quickstart";
 
         private readonly TasksService _service;
 
-        public TasksServiceWrapper()
+        public GTasksService()
         {
             UserCredential credential;
 

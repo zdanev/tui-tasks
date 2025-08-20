@@ -10,7 +10,7 @@ namespace TuiTasks
     class Program
     {
         private static List<GTask> tasks = new List<GTask>();
-        private static TasksServiceWrapper tasksService = new TasksServiceWrapper();
+        private static GTasksService tasksService = new GTasksService();
         private static TableView? table;
 
         static void Main(string[] args)
