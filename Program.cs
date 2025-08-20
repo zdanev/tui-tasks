@@ -58,14 +58,14 @@ namespace TuiTasks
                     if (table != null)
                     {
                         var dataTable = new DataTable();
-                        var titleColumn = new DataColumn("Title");
                         var dueDateColumn = new DataColumn("Due Date");
-                        dataTable.Columns.Add(titleColumn);
+                        var titleColumn = new DataColumn("Title");
                         dataTable.Columns.Add(dueDateColumn);
+                        dataTable.Columns.Add(titleColumn);
 
                         foreach (var task in tasks)
                         {
-                            dataTable.Rows.Add(task.Title, task.Due.HasValue ? task.Due.Value.ToShortDateString() : "");
+                            dataTable.Rows.Add(task.Due.HasValue ? task.Due.Value.ToShortDateString() : "", task.Title);
                         }
                         table.Table = dataTable;
                         table.Style.ColumnStyles.Add(dueDateColumn, new Terminal.Gui.TableView.ColumnStyle() { MaxWidth = 12 });
