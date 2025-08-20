@@ -28,10 +28,10 @@ namespace TuiTasks
 
             table = new TableView()
             {
-                X = 0,
-                Y = 0,
-                Width = Dim.Fill(),
-                Height = Dim.Fill(),
+                X = -1,
+                Y = -1,
+                Width = Dim.Fill() + 2,
+                Height = Dim.Fill() + 2,
                 FullRowSelect = true
             };
             win.Add(table);
