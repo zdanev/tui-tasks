@@ -1,34 +1,56 @@
-
+using System;
+using System.Data;
 using System.Threading.Tasks;
+using Terminal.Gui;
 
 namespace TuiTasks
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             var tasksService = new TasksServiceWrapper();
+            
+            Application.Init();
+            var top = Application.Top;
 
-            if (args.Length > 1 && args[0] == "-a")
+            var win = new Window("TUI Tasks")
             {
-                await tasksService.AddTask(args[1]);
-                System.Console.WriteLine("Task added.");
-            }
-            else if (args.Length > 1 && args[0] == "-d")
+                X = 0,
+                Y = 1,
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
+
+            var table = new TableView()
             {
-                await tasksService.DeleteTask(args[1]);
-            }
-            else
+                X = 0,
+                Y = 0,
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
+            win.Add(table);
+            top.Add(win);
+
+            Task.Run(async () =>
             {
+                // var tasksService = new TasksServiceWrapper();
                 var tasks = await tasksService.ListTasks();
-
-                System.Console.WriteLine("Tasks:");
-                foreach (var task in tasks)
+                Application.MainLoop.Invoke(() =>
                 {
-                  string due = task.Due.HasValue ? "[" + task.Due.Value.ToShortDateString() + "] " : "";
-                    System.Console.WriteLine($"{due}{task.Title} ({task.Id})");
-                }
-            }
+                    var dataTable = new DataTable();
+                    dataTable.Columns.Add("Title");
+                    dataTable.Columns.Add("Due Date");
+
+                    foreach (var task in tasks)
+                    {
+                        dataTable.Rows.Add(task.Title, task.Due.HasValue ? task.Due.Value.ToShortDateString() : "");
+                    }
+                    table.Table = dataTable;
+                });
+            });
+
+            Application.Run();
         }
     }
 }

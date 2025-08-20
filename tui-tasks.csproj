@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Tasks.v1" Version="1.69.0.3790" />
+  <PackageReference Include="Terminal.GUI" Version="1.16.0" />
   </ItemGroup>
 
 </Project>
