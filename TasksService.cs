@@ -33,7 +33,7 @@ namespace TuiTasks
                     "user",
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
-                Console.WriteLine("Credential file saved to: " + credPath);
+                // Console.WriteLine("Credential file saved to: " + credPath);
             }
 
             _service = new TasksService(new BaseClientService.Initializer()
@@ -82,11 +82,11 @@ namespace TuiTasks
             if (taskToDelete != null)
             {
                 await _service.Tasks.Delete(taskToDelete.ListId, taskId).ExecuteAsync();
-                Console.WriteLine($"Task '{taskToDelete.Title}' deleted.");
+                // Console.WriteLine($"Task '{taskToDelete.Title}' deleted.");
             }
             else
             {
-                Console.WriteLine("Task not found.");
+                // Console.WriteLine("Task not found.");
             }
         }
     }
