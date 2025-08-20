@@ -76,9 +76,11 @@ namespace TuiTasks
 
         private static void AddTask()
         {
-            var dialog = new Dialog("Add Task", 60, 7);
+            var dialog = new Dialog("Add Task", 60, 9);
             var titleLabel = new Label("Title:") { X = 1, Y = 1 };
             var titleText = new TextField("") { X = 10, Y = 1, Width = 40 };
+            var dueDateLabel = new Label("Due Date:") { X = 1, Y = 3 };
+            var dueDateField = new DateField(DateTime.Now) { X = 10, Y = 3, Width = 40 };
             var okButton = new Button("OK");
             var cancelButton = new Button("Cancel");
 
@@ -88,7 +90,7 @@ namespace TuiTasks
                 {
                     Task.Run(async () =>
                     {
-                        await tasksService.AddTask(taskTitle);
+                        await tasksService.AddTask(taskTitle, dueDateField.Date);
                         RefreshTasks();
                     });
                     Application.RequestStop();
@@ -96,7 +98,7 @@ namespace TuiTasks
             };
             cancelButton.Clicked += () => { Application.RequestStop(); };
 
-            dialog.Add(titleLabel, titleText);
+            dialog.Add(titleLabel, titleText, dueDateLabel, dueDateField);
             dialog.AddButton(okButton);
             dialog.AddButton(cancelButton);
             Application.Run(dialog);

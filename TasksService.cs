@@ -74,6 +74,16 @@ namespace TuiTasks
             await _service.Tasks.Insert(task, listId).ExecuteAsync();
         }
 
+        public async Task AddTask(string taskTitle, DateTime? dueDate, string listId = "@default")
+        {
+            var task = new Google.Apis.Tasks.v1.Data.Task { Title = taskTitle };
+            if (dueDate.HasValue)
+            {
+                task.Due = dueDate.Value.ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'");
+            }
+            await _service.Tasks.Insert(task, listId).ExecuteAsync();
+        }
+
         public async Task DeleteTask(string taskId)
         {
             var allTasks = await ListTasks();
